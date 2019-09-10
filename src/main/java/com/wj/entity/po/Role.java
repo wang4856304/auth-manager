@@ -34,6 +34,9 @@ public class Role {
     @Column(name = "desc")
     private String desc;
 
+    @Column(name = "is_admin")
+    private int admin;
+
     @Column(name = "is_enable")
     private Integer isEnable = 1;
 

@@ -22,6 +22,7 @@
             `PARENT_ID` bigint(20) not null default 0  comment'父角色ID',
             `ROLE_NAME` varchar(128) not null unique comment '角色名',
             `DESC` varchar(255) comment '角色描述',
+            `IS_ADMIN` tinyint not null default 0 comment '是否管理员,0:否,1:是',
             `IS_ENABLE` tinyint not null default 1 comment '角色状态,0:失效,1:有效',
             `CREATE_AT`            timestamp not null default CURRENT_TIMESTAMP  comment '创建时间',
             `UPDATE_AT`            timestamp not null default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP  comment '更新时间'

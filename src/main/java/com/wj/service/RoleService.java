@@ -2,6 +2,7 @@ package com.wj.service;
 
 import com.wj.entity.dto.RoleDto;
 import com.wj.entity.po.Role;
+import com.wj.entity.vo.RoleVo;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 public interface RoleService {
 
-    List<Role> findAllRole();
+    RoleVo findAllRoleById(Long id);
 
     Role findById(Long id);
 
@@ -27,4 +28,6 @@ public interface RoleService {
     int deleteRole(Long id);
 
     int updateRoleById(Long id, String roleName, String desc);
+
+    List<Long> findAllRoleIdsById(Long id);
 }

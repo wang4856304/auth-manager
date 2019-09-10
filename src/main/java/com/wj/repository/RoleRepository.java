@@ -18,12 +18,12 @@ import java.util.List;
  */
 public interface RoleRepository extends JpaRepository<Role,Long> {
 
-    @Query("select r from Role r where r.isEnable=1")
+    @Query("select r from Role r where r.isEnable=1 and r.parentId=0")
     List<Role> findAllRole();
 
     Role findByIdAndIsEnable(Long id, int isEnable);
 
-    @Query("select r from Role r where roleName like :roleName%")
+    @Query("select r from Role r where roleName like :roleName% and isEnable=1")
     List<Role> findRoleByName(@Param("roleName") String roleName);
 
     @Query("select r from Role r where parentId=:id and isEnable=1")

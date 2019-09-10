@@ -2,6 +2,8 @@ package com.wj.repository;
 
 import com.wj.entity.po.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * @author jun.wang
@@ -12,5 +14,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface UserRoleRepository extends JpaRepository<UserRole,Long> {
 
-    UserRole findByUserId(Long userId);
+    @Query(value = "select id, user_id, role_id, create_at, update_at from user_role where user_id=:userId for update", nativeQuery = true)
+    UserRole findByUserId(@Param("userId") Long userId);
+
+    int deleteByUserId(Long userId);
 }

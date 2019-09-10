@@ -15,4 +15,5 @@ import java.util.List;
 public interface UserService {
 
     Page<User> findAllUser(int pageNo, int pageSize);
+    User findByUsername(String username);
 }

@@ -28,16 +28,16 @@ public class UserRole {
     @Column(name = "user_id")
     private Long userId;
 
-    @OneToOne
+    /*@OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private User user;
+    private User user;*/
 
     @Column(name = "role_id")
     private Long roleId;
 
-    @OneToOne
+    /*@OneToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Role role;
+    private Role role;*/
 
     @Column(name = "create_at")
     private String createAt;

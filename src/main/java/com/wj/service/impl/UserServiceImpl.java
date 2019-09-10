@@ -34,6 +34,11 @@ public class UserServiceImpl implements UserService {
         return resultPage;
     }
 
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsernameAndStatus(username, 1);
+    }
+
     private Pageable createPageable(int pageNo, int pageSize) {
         if (pageNo < 1) {
             pageNo = 1;
