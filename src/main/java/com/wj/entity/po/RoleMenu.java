@@ -27,6 +27,9 @@ public class RoleMenu {
     @Column(name = "role_id")
     private Long roleId;
 
+    @Column(name = "parent_menu_id")
+    private String parentMenuId;
+
     @Column(name = "menu_id")
     private String menuId;
 

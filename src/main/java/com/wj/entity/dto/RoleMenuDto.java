@@ -1,8 +1,10 @@
 package com.wj.entity.dto;
 
+import com.wj.entity.vo.MenuInfoVo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,4 +22,6 @@ public class RoleMenuDto {
     private Long roleId;
 
     private List<String> menuIds;
+
+    private List<MenuInfoVo> menuInfoVoList = new ArrayList<>();
 }

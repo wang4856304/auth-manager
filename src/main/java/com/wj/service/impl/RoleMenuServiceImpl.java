@@ -11,7 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,9 +33,11 @@ public class RoleMenuServiceImpl implements RoleMenuService {
     @Autowired
     private MenuInfoRepository menuInfoRepository;
 
+    private final static String ROOT_MENU_ID = "0";//顶层节点
+
     @Override
     public List<MenuInfoVo> findByRoleId(Long roleId) {
-        List<RoleMenu> roleMenus = roleMenuRepository.findByRoleId(roleId);
+        List<RoleMenu> roleMenus = roleMenuRepository.findByRoleIdAndParentMenuId(roleId, ROOT_MENU_ID);
         if (roleMenus == null || roleMenus.size() == 0) {
             return Collections.emptyList();
         }
@@ -49,24 +51,26 @@ public class RoleMenuServiceImpl implements RoleMenuService {
             BeanUtils.copyProperties(menuInfo, menuInfoVo);
             return menuInfoVo;
         }).collect(Collectors.toList());
-        findChildMenuInfos(menuInfoVoList);
+        findMenuTreeByRoleId(roleId, menuInfoVoList);
         return menuInfoVoList;
     }
 
-    public void findChildMenuInfos(List<MenuInfoVo> menuInfoVoList) {
+    private void findMenuTreeByRoleId(Long roleId, List<MenuInfoVo> menuInfoVoList) {
         menuInfoVoList.stream().map(menuInfoVo -> {
-            List<MenuInfo> childMenuInfos = menuInfoRepository.findChildMenuInfos(menuInfoVo.getId());
-            if (childMenuInfos != null && childMenuInfos.size() != 0) {
-                List<MenuInfoVo> childMenuInfoVoList = childMenuInfos.stream().map(menuInfo -> {
-                    MenuInfoVo menuInfoVoX = new MenuInfoVo();
-                    BeanUtils.copyProperties(menuInfo, menuInfoVoX);
-                    return menuInfoVoX;
+            List<RoleMenu> roleMenus = roleMenuRepository.findByRoleIdAndParentMenuId(roleId, menuInfoVo.getId());
+            if (roleMenus != null && roleMenus.size() != 0) {
+                List<String> menuIds = roleMenus.stream().map(RoleMenu::getMenuId).collect(Collectors.toList());
+                List<MenuInfo> menuInfos = menuInfoRepository.findByIdInAndAndDeleteFlag(menuIds, 0);
+                List<MenuInfoVo> childMenuInfoVoList = menuInfos.stream().map(menuInfo -> {
+                    MenuInfoVo childMenuInfoVo = new MenuInfoVo();
+                    BeanUtils.copyProperties(menuInfo, childMenuInfoVo);
+                    return childMenuInfoVo;
                 }).collect(Collectors.toList());
                 menuInfoVo.setChilds(childMenuInfoVoList);
-                findChildMenuInfos(childMenuInfoVoList);
+                findMenuTreeByRoleId(roleId, childMenuInfoVoList);
             }
             return 0;
-        }).collect(Collectors.toList());
+        }).count();
 
     }
 
@@ -75,16 +79,29 @@ public class RoleMenuServiceImpl implements RoleMenuService {
     public int addRoleMenu(RoleMenuDto roleMenuDto) {
         Long roleId = roleMenuDto.getRoleId();
         roleMenuRepository.deleteByRoleId(roleId);
-        List<String> menuIds = roleMenuDto.getMenuIds();
-        if (menuIds == null || menuIds.size() == 0) {
-            return 0;
+        List<RoleMenu> roleMenuList = new ArrayList<>();
+        phraseRoleMenu(roleMenuList, roleMenuDto.getMenuInfoVoList(), roleId);
+        return roleMenuRepository.saveAll(roleMenuList).size();
+    }
+
+    /**
+     * 解析获取角色对应的权限
+     * @param roleMenuList
+     * @param menuInfoVoList
+     * @param roleId
+     */
+    private void phraseRoleMenu(List<RoleMenu> roleMenuList, List<MenuInfoVo> menuInfoVoList, Long roleId) {
+        if (menuInfoVoList == null || menuInfoVoList.size() == 0) {
+            return;
         }
-        List<RoleMenu> roleMenus = menuIds.stream().map(id->{
+        menuInfoVoList.stream().map(menuInfoVo -> {
             RoleMenu roleMenu = new RoleMenu();
             roleMenu.setRoleId(roleId);
-            roleMenu.setMenuId(id);
-            return roleMenu;
-        }).collect(Collectors.toList());
-        return roleMenuRepository.saveAll(roleMenus).size();
+            roleMenu.setMenuId(menuInfoVo.getId());
+            roleMenu.setParentMenuId(menuInfoVo.getParentId());
+            roleMenuList.add(roleMenu);
+            phraseRoleMenu(roleMenuList, menuInfoVo.getChilds(), roleId);
+            return 0;
+        }).count();
     }
 }

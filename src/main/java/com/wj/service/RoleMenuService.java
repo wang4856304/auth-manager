@@ -14,6 +14,5 @@ import java.util.List;
 public interface RoleMenuService {
 
     List<MenuInfoVo> findByRoleId(Long roleId);
-    void findChildMenuInfos(List<MenuInfoVo> menuInfoVoList);
     int addRoleMenu( RoleMenuDto roleMenuDto);
 }

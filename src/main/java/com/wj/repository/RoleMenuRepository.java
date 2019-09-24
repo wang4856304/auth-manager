@@ -16,4 +16,5 @@ public interface RoleMenuRepository extends JpaRepository<RoleMenu,Long> {
 
     List<RoleMenu> findByRoleId(Long roleId);
     int deleteByRoleId(Long roleId);
+    List<RoleMenu> findByRoleIdAndParentMenuId(Long roleId, String parentMenuId);
 }

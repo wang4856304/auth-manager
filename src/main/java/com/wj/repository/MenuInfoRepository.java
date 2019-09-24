@@ -25,4 +25,5 @@ public interface MenuInfoRepository extends JpaRepository<MenuInfo,String> {
     List<MenuInfo> findByIdInAndAndDeleteFlag(List<String> Ids, int deleteFlag);
 
     List<MenuInfo> findAllByParentIdAndDeleteFlag(String parent, int deleteFlag);
+
 }
