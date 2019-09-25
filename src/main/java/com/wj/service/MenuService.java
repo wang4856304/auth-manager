@@ -14,5 +14,4 @@ import java.util.List;
 public interface MenuService {
 
     List<MenuInfoVo> findAllMenu();
-    MenuInfoVo findParentMenuInfos(MenuInfoVo menuInfoVo);
 }

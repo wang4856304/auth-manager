@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  * @author jun.wang
  * @title: MenuServiceImpl
  * @projectName ownerpro
- * @description: TODO
+ * @description: 菜单
  * @date 2019/9/5 17:32
  */
 
@@ -38,23 +38,6 @@ public class MenuServiceImpl implements MenuService {
         }).collect(Collectors.toList());
         findChildMenuInfos(menuInfoVoList);
         return menuInfoVoList;
-    }
-
-    @Override
-    public MenuInfoVo findParentMenuInfos(MenuInfoVo menuInfoVo) {
-        MenuInfo menuInfo = menuInfoRepository.findMenuByMenuId(menuInfoVo.getId());
-        MenuInfoVo parentMenuInfoVo = new MenuInfoVo();
-        if (menuInfo != null) {
-            MenuInfo parentMenuInfo = menuInfoRepository.findMenuByMenuId(menuInfo.getParentId());
-            if (parentMenuInfo != null) {
-                BeanUtils.copyProperties(parentMenuInfo, parentMenuInfoVo);
-                parentMenuInfoVo.getChilds().add(menuInfoVo);
-                if (!"0".equals(parentMenuInfo.getParentId())) {
-                    parentMenuInfoVo = findParentMenuInfos(parentMenuInfoVo);
-                }
-            }
-        }
-        return parentMenuInfoVo;
     }
 
     private void findChildMenuInfos(List<MenuInfoVo> menuInfoVoList) {
