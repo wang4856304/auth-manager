@@ -29,7 +29,5 @@ public class MenuTest {
     public void findParentMenuInfos() {
         MenuInfoVo menuInfoVo = new MenuInfoVo();
         menuInfoVo.setId("4");
-        MenuInfoVo res = menuService.findParentMenuInfos(menuInfoVo);
-        System.out.println(JSONObject.toJSONString(res));
     }
 }

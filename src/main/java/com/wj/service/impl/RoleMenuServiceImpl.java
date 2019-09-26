@@ -1,5 +1,7 @@
 package com.wj.service.impl;
 
+import com.codingapi.txlcn.tc.annotation.LcnTransaction;
+import com.codingapi.txlcn.tc.annotation.TxcTransaction;
 import com.wj.entity.dto.RoleMenuDto;
 import com.wj.entity.po.MenuInfo;
 import com.wj.entity.po.RoleMenu;
@@ -76,6 +78,8 @@ public class RoleMenuServiceImpl implements RoleMenuService {
 
     @Override
     @Transactional
+    //@TxcTransaction
+    @LcnTransaction
     public int addRoleMenu(RoleMenuDto roleMenuDto) {
         Long roleId = roleMenuDto.getRoleId();
         roleMenuRepository.deleteByRoleId(roleId);
