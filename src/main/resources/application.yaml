@@ -49,6 +49,20 @@ spring:
    liquibase:
       change-log: classpath:liquibase/master.xml
       enabled: true
+   rabbitmq:
+      host: 127.0.0.1
+      port: 5672
+      username: admin
+      password: admin
+   zipkin:
+      sender:
+         type: rabbit
+      enabled: true  #是否启动zipkin，默认为true
+
+   #这里把抽样百分比设置为1，即信息全部采集
+   sleuth:
+      sampler:
+         probability: 1.0
 
 
 logging:
